@@ -173,8 +173,8 @@ function New-HtmlReport {
 
     $cssPath = Join-Path $AssetRoot 'css\style.css'
     $jsPath  = Join-Path $AssetRoot 'js\dashboard.js'
-    $css = if (Test-Path -LiteralPath $cssPath) { Get-Content -Raw -LiteralPath $cssPath } else { '/* style.css not found */' }
-    $js  = if (Test-Path -LiteralPath $jsPath)  { Get-Content -Raw -LiteralPath $jsPath }  else { '/* dashboard.js not found */' }
+    $css = if (Test-Path -LiteralPath $cssPath) { Get-Content -Raw -LiteralPath $cssPath -Encoding UTF8 } else { '/* style.css not found */' }
+    $js  = if (Test-Path -LiteralPath $jsPath)  { Get-Content -Raw -LiteralPath $jsPath -Encoding UTF8 }  else { '/* dashboard.js not found */' }
     $reportJson = ($ReportData | ConvertTo-Json -Depth 12 -Compress).Replace('</', '<\/')
 
     $scores    = $ReportData.Scores
