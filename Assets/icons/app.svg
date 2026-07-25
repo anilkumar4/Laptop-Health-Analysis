@@ -1,0 +1,5 @@
+﻿<svg xmlns="http://www.w3.org/2000/svg" width="128" height="128" viewBox="0 0 128 128" role="img" aria-label="Developer Health Analyzer icon">
+  <rect x="12" y="12" width="104" height="104" rx="18" fill="#111820" stroke="#39a2ff" stroke-width="6"/>
+  <path d="M34 68l16 16 42-44" fill="none" stroke="#47d18c" stroke-width="10" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M28 96h72" stroke="#263343" stroke-width="8" stroke-linecap="round"/>
+</svg>

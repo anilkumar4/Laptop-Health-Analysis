@@ -1,0 +1,6 @@
+﻿Reports/*.html
+Reports/*.json
+Reports/*.csv
+Logs/*.log
+.DS_Store
+Thumbs.db
