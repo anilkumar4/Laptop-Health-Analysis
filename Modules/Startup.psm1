@@ -9,7 +9,17 @@ function Get-StartupReport {
     $startupCommands = @(Invoke-SafeCommand -Log $Log -Context 'startup commands' -Default @() -ScriptBlock { Get-CimInstance Win32_StartupCommand | Select-Object Name, Command, Location, User })
     $autoServices = @(Invoke-SafeCommand -Log $Log -Context 'automatic services' -Default @() -ScriptBlock { Get-CimInstance Win32_Service | Where-Object { $_.StartMode -eq 'Auto' } | Select-Object Name, DisplayName, State, StartMode, StartName, PathName })
     $scheduledTasks = @(Invoke-SafeCommand -Log $Log -Context 'scheduled tasks' -Default @() -ScriptBlock {
-        Get-ScheduledTask | Where-Object { $_.State -ne 'Disabled' -and $_.Triggers } | Select-Object -First 300 TaskName, TaskPath, State, Author
+        Get-ScheduledTask | Where-Object { $_.State -ne 'Disabled' -and $_.Triggers } | Select-Object -First 300 TaskName, TaskPath, State, Author | ForEach-Object {
+            $info = $_ | Get-ScheduledTaskInfo -ErrorAction SilentlyContinue
+            [pscustomobject]@{
+                TaskName = $_.TaskName
+                TaskPath = $_.TaskPath
+                State = $_.State
+                Author = $_.Author
+                LastRunTime = if ($info) { $info.LastRunTime } else { $null }
+                NextRunTime = if ($info) { $info.NextRunTime } else { $null }
+            }
+        }
     })
     $bootEvents = @(Invoke-SafeCommand -Log $Log -Context 'boot performance events' -Default @() -ScriptBlock {
         Get-WinEvent -FilterHashtable @{ LogName='Microsoft-Windows-Diagnostics-Performance/Operational'; Id=100; StartTime=(Get-Date).AddDays(-30) } -ErrorAction Stop |

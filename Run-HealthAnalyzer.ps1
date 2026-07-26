@@ -248,6 +248,7 @@ function Invoke-HealthAnalysis {
     $metadata = [pscustomobject]@{
         AnalyzerVersion = $script:AnalyzerVersion
         GeneratedAt = (Get-Date).ToString('o')
+        ScanDurationSeconds = 0
         ComputerName = $env:COMPUTERNAME
         UserName = $env:USERNAME
         IsAdministrator = Test-Administrator
@@ -298,6 +299,7 @@ function Invoke-HealthAnalysis {
 
     if (-not $Quiet) { Write-Progress -Activity 'Developer Health Analyzer' -Completed }
 
+    $report.Metadata.ScanDurationSeconds = [math]::Round(((Get-Date) - $script:StartedAt).TotalSeconds, 1)
     $report.Scores = Get-HealthScores -ReportData $report
     $report.OverallScore = $report.Scores.Overall
     $report.Recommendations = @(Get-AggregatedRecommendations -ReportData $report)

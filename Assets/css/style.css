@@ -1,9 +1,9 @@
-/* ═══════════════════════════════════════════════════════════════
-   Developer Health Analyzer — Dashboard Styles
+/* ---------------------------------------------------------------
+   Developer Health Analyzer - Dashboard Styles
    Version 1.0.0 | MIT License
-   ═══════════════════════════════════════════════════════════════ */
+   --------------------------------------------------------------- */
 
-/* ── CSS Custom Properties (Dark theme — default) ──────────── */
+/* -- CSS Custom Properties (Dark theme - default) ------------ */
 :root {
   color-scheme: light dark;
   --bg-primary:    #0a0e1a;
@@ -36,7 +36,7 @@
   --transition:    0.25s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-/* ── Light Theme ───────────────────────────────────────────── */
+/* -- Light Theme --------------------------------------------- */
 [data-bs-theme="light"] {
   --bg-primary:    #f1f5f9;
   --bg-secondary:  #ffffff;
@@ -62,7 +62,7 @@
   --shadow-lg:     0 8px 32px rgba(0,0,0,0.12);
 }
 
-/* ── Reset & Base ──────────────────────────────────────────── */
+/* -- Reset & Base -------------------------------------------- */
 *, *::before, *::after { box-sizing: border-box; }
 
 body {
@@ -77,13 +77,13 @@ body {
   transition: background var(--transition), color var(--transition);
 }
 
-/* ── Custom Scrollbar ──────────────────────────────────────── */
+/* -- Custom Scrollbar ---------------------------------------- */
 ::-webkit-scrollbar { width: 8px; height: 8px; }
 ::-webkit-scrollbar-track { background: var(--bg-primary); }
 ::-webkit-scrollbar-thumb { background: var(--border-hover); border-radius: 4px; }
 ::-webkit-scrollbar-thumb:hover { background: var(--text-muted); }
 
-/* ── App Header ────────────────────────────────────────────── */
+/* -- App Header ---------------------------------------------- */
 .app-header {
   display: flex;
   justify-content: space-between;
@@ -139,17 +139,17 @@ body {
   transform: scale(1.05);
 }
 
-/* ── Dashboard Shell ───────────────────────────────────────── */
+/* -- Dashboard Shell ----------------------------------------- */
 .dashboard-shell {
   padding: 24px 32px 48px;
   max-width: 1800px;
   margin: 0 auto;
 }
 
-/* ── Score Grid ────────────────────────────────────────────── */
+/* -- Score Grid ---------------------------------------------- */
 .score-grid {
   display: grid;
-  grid-template-columns: repeat(7, minmax(160px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
   gap: 14px;
   margin-bottom: 24px;
 }
@@ -205,7 +205,7 @@ body {
 .score-card.warn .progress-bar     { background: linear-gradient(90deg, var(--fair), #fbbf24); }
 .score-card.bad .progress-bar      { background: linear-gradient(90deg, var(--critical), #f87171); }
 
-/* ── Dashboard Sections ────────────────────────────────────── */
+/* -- Dashboard Sections -------------------------------------- */
 .dashboard-section {
   border: 1px solid var(--border);
   border-radius: var(--radius-md);
@@ -244,7 +244,7 @@ body {
 
 .section-body { padding: 20px; }
 
-/* ── Key-Value and Mini Grids ──────────────────────────────── */
+/* -- Key-Value and Mini Grids -------------------------------- */
 .kv-grid, .mini-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
@@ -278,7 +278,7 @@ body {
   color: var(--text-primary);
 }
 
-/* ── Charts ────────────────────────────────────────────────── */
+/* -- Charts -------------------------------------------------- */
 .chart-grid {
   display: grid;
   grid-template-columns: minmax(280px, 420px) 1fr;
@@ -295,7 +295,7 @@ canvas {
   padding: 14px;
 }
 
-/* ── Treemap ───────────────────────────────────────────────── */
+/* -- Treemap ------------------------------------------------- */
 .treemap {
   min-height: 340px;
   border: 1px solid var(--border);
@@ -327,7 +327,7 @@ canvas {
 }
 .treemap-cell strong { font-size: 13px; display: block; margin-bottom: 2px; }
 
-/* ── Tables ────────────────────────────────────────────────── */
+/* -- Tables -------------------------------------------------- */
 h3 {
   font-size: 15px;
   font-weight: 600;
@@ -393,7 +393,7 @@ tbody tr:hover { background: var(--bg-elevated) !important; }
 
 .table-responsive { overflow-x: auto; }
 
-/* ── Callout ───────────────────────────────────────────────── */
+/* -- Callout ------------------------------------------------- */
 .callout {
   border: 1px solid var(--border);
   border-left: 4px solid var(--accent);
@@ -405,7 +405,7 @@ tbody tr:hover { background: var(--bg-elevated) !important; }
 }
 .callout strong { color: var(--accent); }
 
-/* ── Recommendations ───────────────────────────────────────── */
+/* -- Recommendations ----------------------------------------- */
 .recommendation {
   border: 1px solid var(--border);
   border-left-width: 4px;
@@ -455,7 +455,7 @@ dl {
 dt { color: var(--text-muted); font-weight: 500; }
 dd { margin: 0; }
 
-/* ── Health Badge Utilities ────────────────────────────────── */
+/* -- Health Badge Utilities ---------------------------------- */
 .health-excellent { color: var(--excellent); }
 .health-good      { color: var(--good); }
 .health-fair      { color: var(--fair); }
@@ -467,10 +467,16 @@ dd { margin: 0; }
 .badge-warn { background: var(--fair); color: #1a1a2e; }
 .badge-na   { background: var(--text-muted); color: white; }
 
-/* ── Empty State ───────────────────────────────────────────── */
+/* -- Empty State --------------------------------------------- */
 .empty-state, .muted { color: var(--text-muted); font-style: italic; }
 
-/* ── Footer ────────────────────────────────────────────────── */
+.empty-good {
+  color: var(--excellent);
+  font-style: normal;
+  font-weight: 500;
+}
+
+/* -- Footer -------------------------------------------------- */
 .app-footer {
   padding: 20px 32px;
   color: var(--text-muted);
@@ -480,7 +486,7 @@ dd { margin: 0; }
   background: var(--bg-card);
 }
 
-/* ── Score Animation ───────────────────────────────────────── */
+/* -- Score Animation ----------------------------------------- */
 @keyframes countUp {
   from { opacity: 0; transform: translateY(8px); }
   to   { opacity: 1; transform: translateY(0); }
@@ -502,7 +508,116 @@ dd { margin: 0; }
 .dashboard-section:nth-child(9) { animation-delay: 0.40s; }
 .dashboard-section:nth-child(10){ animation-delay: 0.45s; }
 
-/* ── Responsive ────────────────────────────────────────────── */
+/* -- Executive Summary --------------------------------------- */
+.executive-summary {
+  background: linear-gradient(135deg, var(--bg-card), var(--bg-elevated));
+  border: 1px solid var(--border);
+  border-left: 4px solid var(--accent);
+  border-radius: var(--radius-md);
+  padding: 24px 28px;
+  margin-bottom: 20px;
+}
+.executive-summary h2 {
+  font-size: 18px;
+  font-weight: 700;
+  margin: 0 0 10px;
+  color: var(--accent);
+}
+.executive-summary p { margin: 6px 0; color: var(--text-secondary); font-size: 14px; }
+.executive-summary strong { color: var(--text-primary); }
+
+/* -- Sidebar TOC --------------------------------------------- */
+.sidebar-toc {
+  position: fixed;
+  right: 16px;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 90;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  padding: 14px 16px;
+  max-height: 60vh;
+  overflow-y: auto;
+  box-shadow: var(--shadow-lg);
+  width: 180px;
+}
+.sidebar-toc strong {
+  display: block;
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--text-muted);
+  margin-bottom: 10px;
+}
+.sidebar-toc a {
+  display: block;
+  padding: 5px 8px;
+  font-size: 12px;
+  color: var(--text-secondary);
+  text-decoration: none;
+  border-radius: 4px;
+  transition: all var(--transition);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.sidebar-toc a:hover {
+  background: var(--bg-elevated);
+  color: var(--accent);
+}
+
+/* -- Table Counts & Badges ----------------------------------- */
+.table-count {
+  color: var(--text-muted);
+  font-size: 12px;
+  margin-left: 8px;
+}
+.rec-count-badge {
+  background: var(--poor);
+  color: white;
+  font-size: 11px;
+  padding: 2px 8px;
+  border-radius: 99px;
+  margin-left: 8px;
+  font-weight: 600;
+}
+
+/* -- Inline Drive Bar ---------------------------------------- */
+.drive-usage-bar {
+  height: 6px;
+  border-radius: 3px;
+  background: var(--bg-elevated);
+  margin-top: 4px;
+  overflow: hidden;
+}
+.drive-usage-bar > div {
+  height: 100%;
+  border-radius: 3px;
+  transition: width 0.8s ease;
+}
+
+/* -- Details / Summary --------------------------------------- */
+details.not-found-details {
+  margin-top: 12px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  background: var(--bg-elevated);
+}
+details.not-found-details summary {
+  padding: 10px 14px;
+  cursor: pointer;
+  color: var(--text-muted);
+  font-size: 13px;
+  font-weight: 500;
+}
+details.not-found-details > div {
+  padding: 10px 14px;
+  color: var(--text-secondary);
+  font-size: 13px;
+}
+
+/* -- Responsive ---------------------------------------------- */
 @media (max-width: 1400px) {
   .score-grid { grid-template-columns: repeat(4, 1fr); }
 }
@@ -511,6 +626,7 @@ dd { margin: 0; }
   .score-grid { grid-template-columns: repeat(3, 1fr); }
   .kv-grid, .mini-grid { grid-template-columns: repeat(2, 1fr); }
   .chart-grid { grid-template-columns: 1fr; }
+  .sidebar-toc { display: none; }
 }
 
 @media (max-width: 768px) {
@@ -529,7 +645,7 @@ dd { margin: 0; }
   .score-icon { display: none; }
 }
 
-/* ── Print Styles ──────────────────────────────────────────── */
+/* -- Print Styles -------------------------------------------- */
 @media print {
   body { background: white; color: black; font-size: 11px; }
   .app-header { position: static; box-shadow: none; background: white; border-bottom: 2px solid #000; }
@@ -539,7 +655,10 @@ dd { margin: 0; }
   .score-card { border-color: #ccc; }
   .section-toggle { background: #f5f5f5; }
   .collapse:not(.show) { display: block !important; }
-  canvas { max-height: 250px; }
-  .treemap { min-height: 200px; }
+  canvas { display: none !important; }
+  .treemap { display: none !important; }
   .recommendation { page-break-inside: avoid; }
+  .sidebar-toc { display: none !important; }
+  .collapse { display: block !important; height: auto !important; }
+  .section-toggle[aria-expanded="false"] + .collapse { display: block !important; }
 }

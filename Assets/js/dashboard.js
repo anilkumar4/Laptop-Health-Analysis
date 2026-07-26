@@ -433,9 +433,204 @@
     });
   });
 
+  // ── 8. Storage Category Doughnut Chart (C6) ───────────────
+  const diskCategories = ((report.Storage || {}).DiskUsageSummary || []).filter(c => c.SizeGB > 0);
+  if (document.getElementById('storageCategoryChart') && diskCategories.length > 0) {
+    const catColors = ['#8b5cf6', '#ec4899', '#f59e0b', '#10b981', '#3b82f6', '#06b6d4'];
+    makeChart('storageCategoryChart', {
+      type: 'doughnut',
+      data: {
+        labels: diskCategories.map(c => c.Category),
+        datasets: [{
+          data: diskCategories.map(c => c.SizeGB),
+          backgroundColor: catColors.slice(0, diskCategories.length),
+          borderWidth: 0
+        }]
+      },
+      options: {
+        plugins: { title: { display: true, text: 'Storage by Category (GB)', font: { size: 14, weight: 600 } }, legend: { position: 'bottom' } }
+      }
+    });
+  }
+
+  // ── 9. Disk I/O Bar Chart (C2) ────────────────────────────
+  const diskIo = ((report.Performance || {}).DiskActivity || []);
+  if (document.getElementById('diskIoChart') && diskIo.length > 0) {
+    makeChart('diskIoChart', {
+      type: 'bar',
+      data: {
+        labels: diskIo.map(d => d.Disk),
+        datasets: [
+          { label: 'Read (B/s)', data: diskIo.map(d => d.ReadBytesPerSec), backgroundColor: '#3b82f6', borderRadius: 4 },
+          { label: 'Write (B/s)', data: diskIo.map(d => d.WriteBytesPerSec), backgroundColor: '#f59e0b', borderRadius: 4 }
+        ]
+      },
+      options: {
+        plugins: { title: { display: true, text: 'Disk I/O Activity', font: { size: 14, weight: 600 } } },
+        scales: {
+          x: { grid: { color: chartGridColor() }, ticks: { color: chartTextColor() } },
+          y: { grid: { color: chartGridColor() }, ticks: { color: chartTextColor() } }
+        }
+      }
+    });
+  }
+
+  // ── 10. Boot Time Trend Chart (H5) ────────────────────────
+  const bootEvents = ((report.Startup || {}).BootEvents || []);
+  if (document.getElementById('bootTimeChart') && bootEvents.length > 0) {
+    makeChart('bootTimeChart', {
+      type: 'line',
+      data: {
+        labels: bootEvents.map(e => new Date(e.TimeCreated).toLocaleDateString()),
+        datasets: [{
+          label: 'Boot Duration (s)',
+          data: bootEvents.map(e => e.BootDurationSeconds),
+          borderColor: '#10b981',
+          backgroundColor: 'rgba(16, 185, 129, 0.1)',
+          fill: true,
+          tension: 0.3
+        }]
+      },
+      options: {
+        plugins: { title: { display: true, text: 'Boot Time Trend', font: { size: 14, weight: 600 } } },
+        scales: {
+          x: { grid: { color: chartGridColor() }, ticks: { color: chartTextColor() } },
+          y: { grid: { color: chartGridColor() }, ticks: { color: chartTextColor() } }
+        }
+      }
+    });
+  }
+
+  // ── 11. Charging History Chart (M5) ───────────────────────
+  const chargeHistory = ((report.Battery || {}).ChargingHistory || []);
+  if (document.getElementById('chargingHistoryChart') && chargeHistory.length > 0) {
+    makeChart('chargingHistoryChart', {
+      type: 'line',
+      data: {
+        labels: chargeHistory.map(h => new Date(h.Timestamp).toLocaleDateString()),
+        datasets: [{
+          label: 'Full Charge Capacity (mWh)',
+          data: chargeHistory.map(h => h.FullChargeCapacity),
+          borderColor: '#8b5cf6',
+          backgroundColor: 'rgba(139, 92, 246, 0.1)',
+          fill: true,
+          tension: 0.2
+        }]
+      },
+      options: {
+        plugins: { title: { display: true, text: 'Battery Capacity History', font: { size: 14, weight: 600 } } },
+        scales: {
+          x: { grid: { color: chartGridColor() }, ticks: { color: chartTextColor() } },
+          y: { grid: { color: chartGridColor() }, ticks: { color: chartTextColor() } }
+        }
+      }
+    });
+  }
+
+  // ── 12. Cleanup Categories Chart (H7) ─────────────────────
+  const cleanupFindings = ((report.CleanupAdvisor || {}).Findings || []);
+  if (document.getElementById('cleanupCategoryChart') && cleanupFindings.length > 0) {
+    const cleanupGroups = {};
+    cleanupFindings.forEach(f => {
+      cleanupGroups[f.Category] = (cleanupGroups[f.Category] || 0) + (f.SizeGB || 0);
+    });
+    makeChart('cleanupCategoryChart', {
+      type: 'bar',
+      data: {
+        labels: Object.keys(cleanupGroups),
+        datasets: [{
+          label: 'Size (GB)',
+          data: Object.values(cleanupGroups),
+          backgroundColor: '#ef4444',
+          borderRadius: 4
+        }]
+      },
+      options: {
+        indexAxis: 'y',
+        plugins: { legend: { display: false }, title: { display: true, text: 'Cleanup Recommendations by Category', font: { size: 14, weight: 600 } } },
+        scales: {
+          x: { grid: { color: chartGridColor() }, ticks: { color: chartTextColor() } },
+          y: { grid: { display: false }, ticks: { color: chartTextColor() } }
+        }
+      }
+    });
+  }
+
+  // ── Color-Coded Drive Bars (L6) ───────────────────────────
+  const drivesTable = document.getElementById('drivesTable');
+  if (drivesTable) {
+    drivesTable.querySelectorAll('tbody tr').forEach(tr => {
+      Array.from(tr.children).forEach(cell => {
+        if (cell.textContent.includes('%')) {
+          const pctMatch = cell.textContent.match(/([\d.]+)\s*%/);
+          if (pctMatch) {
+            const pct = parseFloat(pctMatch[1]);
+            let color = 'var(--critical)';
+            if (pct >= 30) color = 'var(--excellent)';
+            else if (pct >= 15) color = 'var(--fair)';
+            if (!cell.querySelector('.drive-usage-bar')) {
+              cell.innerHTML = `<div>${cell.textContent}</div><div class="drive-usage-bar"><div style="width: ${pct}%; background: ${color};"></div></div>`;
+            }
+          }
+        }
+      });
+    });
+  }
+
+  // ── Table Row Counts (L5) ─────────────────────────────────
+  window.addEventListener('load', () => {
+    document.querySelectorAll('.table-count').forEach(el => {
+      const container = el.closest('.dashboard-section') || el.closest('div');
+      const table = container.querySelector('table tbody');
+      if (table) {
+        const count = Array.from(table.querySelectorAll('tr')).filter(tr => tr.style.display !== 'none').length;
+        el.textContent = count;
+      }
+    });
+  });
+
+  // ── Expand All / Collapse All (L7) ────────────────────────
+  const toggleBtn = document.getElementById('toggleAllSections');
+  if (toggleBtn) {
+    let allExpanded = true;
+    toggleBtn.addEventListener('click', () => {
+      allExpanded = !allExpanded;
+      document.querySelectorAll('.dashboard-section .collapse').forEach(el => {
+        if (allExpanded) el.classList.add('show');
+        else el.classList.remove('show');
+      });
+      document.querySelectorAll('.section-toggle').forEach(btn => {
+        btn.setAttribute('aria-expanded', allExpanded.toString());
+      });
+    });
+  }
+
   // ── Initialize Lucide Icons ───────────────────────────────
   if (window.lucide) {
     window.lucide.createIcons();
+  }
+
+  // ── Sidebar TOC (H6) ──────────────────────────────────────
+  const sections = document.querySelectorAll('.dashboard-section');
+  if (sections.length > 0) {
+    const nav = document.createElement('nav');
+    nav.className = 'sidebar-toc';
+    nav.innerHTML = '<strong>Sections</strong>';
+    sections.forEach(sec => {
+      const title = sec.querySelector('.section-title');
+      const id = sec.querySelector('.collapse')?.id;
+      if (title && id) {
+        const link = document.createElement('a');
+        link.href = '#' + id;
+        link.textContent = title.textContent.trim();
+        link.addEventListener('click', e => {
+          e.preventDefault();
+          sec.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        });
+        nav.appendChild(link);
+      }
+    });
+    document.body.appendChild(nav);
   }
 
   // ── Run Score Animations on Load ──────────────────────────

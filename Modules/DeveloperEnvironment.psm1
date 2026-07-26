@@ -138,11 +138,21 @@ function Get-DeveloperEnvironmentReport {
         [void]$recommendations.Add((New-AnalyzerRecommendation -Priority Medium -Category 'Developer Environment' -Problem 'Large developer caches detected' -Reason 'One or more editor or IDE caches exceed 5 GB.' -Risk 'Large caches can consume SSD space and slow backup/indexing workflows.' -SuggestedFix 'Review cache folders in Cleanup Advisor before deleting anything.' -EstimatedImprovement '+5 storage/developer score'))
     }
 
+    $wslDistros = @(Invoke-SafeCommand -Log $Log -Context 'WSL distributions' -Default @() -ScriptBlock {
+        $wslOutput = & wsl --list --quiet 2>$null
+        if ($wslOutput) {
+            @($wslOutput | Where-Object { $_ -and $_.Trim() }) | ForEach-Object {
+                [pscustomobject]@{ Name = $_.Trim(); Source = 'WSL' }
+            }
+        }
+    })
+
     [pscustomobject]@{
         Score = [int](Limit-Number -Value $score -Minimum 0 -Maximum 100)
         Tools = @($detections)
         Folders = @($folders | Sort-Object SizeBytes -Descending)
         InstalledToolCount = $installedCount
+        WSL = @($wslDistros)
         Recommendations = @($recommendations)
     }
 }
